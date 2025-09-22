@@ -47,4 +47,4 @@
 ## Auth Progress
 - 2025-09-22: Magic-link email login and session callback wired; need automated profile upsert after first sign-in.
 - 2025-09-22: Profile upsert API wired to auth callback; UI still needs to display user profile data.
-- 2025-09-22: Signed upload URLs scaffolded; requires `print-uploads` bucket (private) in Supabase Storage.
+- 2025-09-22: Signed upload URLs auto-provision storage bucket on demand.
