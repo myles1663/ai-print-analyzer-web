@@ -15,7 +15,7 @@
 ## Checklists
 
 ### MVP Delivery
-- [ ] Configure Supabase project (auth, Postgres schema, storage buckets).
+- [x] Configure Supabase project (auth, Postgres schema, storage buckets).
 - [ ] Build auth + printer profile capture UI.
 - [ ] Implement image upload with metadata (printer model, settings).
 - [ ] Connect baseline AI inference pipeline (vision + text suggestions).
@@ -33,3 +33,14 @@
 - [ ] Add monitoring/analytics (Vercel Analytics, Sentry, Supabase logs).
 - [ ] Draft privacy policy & terms for image handling and data retention.
 - [ ] Prepare marketing landing page and onboarding emails.
+
+## Supabase Schema Plan
+- `profiles`: auth-linked user info (`id uuid primary key references auth.users.id`, `display_name`, `square_customer_id`, `subscription_tier`, timestamps).
+- `printers`: per-user printer catalog (`id uuid pk`, `user_id` FK to profiles, manufacturer, model, nozzle_size, notes).
+- `print_settings`: snapshot of slicer inputs (`id uuid pk`, `printer_id`, basic parameters like `material`, `layer_height`, `nozzle_temp`, `bed_temp`, `print_speed`, `infill`, `notes`).
+- `print_jobs`: uploaded print instances (`id uuid pk`, `user_id`, optional `printer_id`, `settings_id`, `image_path`, `status`, `analysis_requested_at`, timestamps).
+- `analysis_results`: AI output tied to `print_jobs` (`id uuid pk`, `print_job_id`, `vision_summary`, `recommendations`, `confidence_scores jsonb`, `model_version`, `duration_ms`).
+- `usage_ledger`: tracks credits/subscription usage (`id uuid pk`, `user_id`, `change int`, `reason`, `square_invoice_id`, timestamps).
+- `affiliate_links`: curated hardware adjustments (`id uuid pk`, `printer_match jsonb`, `title`, `url`, `notes`, `is_sponsored`).
+- Policies: enable RLS; users can CRUD their own resources. Service role handles system writes (webhooks, workers). Public access limited to signed URLs for storage.
+- Storage buckets: `print-uploads` (private, user-owned) and `analysis-reports` (private) with policies to allow read/write via signed URLs.

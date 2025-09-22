@@ -1,103 +1,87 @@
-import Image from "next/image";
+﻿import Link from "next/link";
+import { supabaseServerClient } from "@/lib/supabase";
 
-export default function Home() {
+export default async function Home() {
+  const supabase = supabaseServerClient();
+
+  const { count, error } = await supabase
+    .from("profiles")
+    .select("*", { head: true, count: "exact" });
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <main className="min-h-screen bg-slate-950 text-slate-100">
+      <div className="mx-auto flex max-w-4xl flex-col gap-12 px-6 py-16">
+        <section className="space-y-4">
+          <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
+            AI Print Analyzer
+          </h1>
+          <p className="text-slate-300">
+            Live firmware diagnostics for your FDM printer. Upload photos, log
+            machine settings, and receive data-backed fixes powered by
+            open-source AI models.
+          </p>
+          <div className="rounded-lg border border-slate-800 bg-slate-900/60 p-4 text-sm text-slate-300">
+            <h2 className="font-medium text-slate-100">Supabase status</h2>
+            <p className="mt-1">
+              {error ? (
+                <span className="text-rose-400">
+                  Unable to reach Supabase: {error.message}
+                </span>
+              ) : (
+                <span>
+                  Connected. Profiles stored: <strong>{count ?? 0}</strong>
+                </span>
+              )}
+            </p>
+            <p className="mt-2 text-xs text-slate-500">
+              Add your first profile by wiring Supabase Auth in the upcoming
+              steps.
+            </p>
+          </div>
+        </section>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+        <section className="space-y-3">
+          <h2 className="text-2xl font-semibold text-slate-100">
+            Next implementation steps
+          </h2>
+          <ol className="space-y-3 text-slate-300">
+            <li className="rounded-lg border border-slate-800 bg-slate-900/70 p-4">
+              <span className="font-medium text-slate-100">Auth & profiles</span>
+              <p className="mt-1 text-sm text-slate-400">
+                Connect Supabase Auth so users can sign in and populate the
+                <code className="mx-1 rounded bg-slate-800 px-1 py-0.5">profiles</code>
+                table.
+              </p>
+            </li>
+            <li className="rounded-lg border border-slate-800 bg-slate-900/70 p-4">
+              <span className="font-medium text-slate-100">Upload workflow</span>
+              <p className="mt-1 text-sm text-slate-400">
+                Build the photo upload pipeline and metadata form for printer
+                settings.
+              </p>
+            </li>
+            <li className="rounded-lg border border-slate-800 bg-slate-900/70 p-4">
+              <span className="font-medium text-slate-100">AI recommendations</span>
+              <p className="mt-1 text-sm text-slate-400">
+                Call the Hugging Face and Cohere/Mistral APIs to translate
+                failures into actionable fixes.
+              </p>
+            </li>
+          </ol>
+          <div className="text-sm text-slate-400">
+            Track work in
+            <Link
+              className="ml-1 underline decoration-slate-600 underline-offset-4 hover:text-slate-200"
+              href="https://github.com/myles1663/ai-print-analyzer-web/blob/main/NOTES.md"
+              target="_blank"
+              rel="noreferrer"
+            >
+              NOTES.md
+            </Link>
+            .
+          </div>
+        </section>
+      </div>
+    </main>
   );
 }
