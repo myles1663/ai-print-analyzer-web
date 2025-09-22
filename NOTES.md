@@ -44,3 +44,5 @@
 - `affiliate_links`: curated hardware adjustments (`id uuid pk`, `printer_match jsonb`, `title`, `url`, `notes`, `is_sponsored`).
 - Policies: enable RLS; users can CRUD their own resources. Service role handles system writes (webhooks, workers). Public access limited to signed URLs for storage.
 - Storage buckets: `print-uploads` (private, user-owned) and `analysis-reports` (private) with policies to allow read/write via signed URLs.
+## Auth Progress
+- 2025-09-22: Magic-link email login and session callback wired; need automated profile upsert after first sign-in.

@@ -1,12 +1,15 @@
-﻿import { createClient } from '@supabase/supabase-js';
+﻿import { createBrowserClient } from '@supabase/ssr';
 import { getEnvVar } from '@/lib/env';
 
 const supabaseUrl = getEnvVar('NEXT_PUBLIC_SUPABASE_URL');
 const supabaseAnonKey = getEnvVar('NEXT_PUBLIC_SUPABASE_ANON_KEY');
 
-export const supabaseBrowserClient = () => createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    persistSession: true,
-    detectSessionInUrl: true,
-  },
-});
+let browserClient: ReturnType<typeof createBrowserClient> | null = null;
+
+export const supabaseBrowserClient = () => {
+  if (!browserClient) {
+    browserClient = createBrowserClient(supabaseUrl, supabaseAnonKey);
+  }
+
+  return browserClient;
+};
