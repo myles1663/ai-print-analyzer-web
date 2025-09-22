@@ -16,7 +16,7 @@
 
 ### MVP Delivery
 - [x] Configure Supabase project (auth, Postgres schema, storage buckets).
-- [ ] Build auth + printer profile capture UI.
+- [x] Build auth with profile bootstrap (printer profile UI pending).
 - [ ] Implement image upload with metadata (printer model, settings).
 - [ ] Connect baseline AI inference pipeline (vision + text suggestions).
 - [ ] Display analysis results with actionable tips and history view.
@@ -46,3 +46,5 @@
 - Storage buckets: `print-uploads` (private, user-owned) and `analysis-reports` (private) with policies to allow read/write via signed URLs.
 ## Auth Progress
 - 2025-09-22: Magic-link email login and session callback wired; need automated profile upsert after first sign-in.
+- 2025-09-22: Profile upsert API wired to auth callback; UI still needs to display user profile data.
+- 2025-09-22: Signed upload URLs scaffolded; requires `print-uploads` bucket (private) in Supabase Storage.

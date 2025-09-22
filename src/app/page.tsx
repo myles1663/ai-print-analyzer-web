@@ -4,12 +4,13 @@ import { supabaseServerClient } from "@/lib/supabase";
 export default async function Home() {
   const supabase = supabaseServerClient();
 
-  const { count, error } = await supabase
-    .from("profiles")
-    .select("*", { head: true, count: "exact" });
+  const [{ count, error }, { data: { user } }] = await Promise.all([
+    supabase.from("profiles").select("*", { head: true, count: "exact" }),
+    supabase.auth.getUser(),
+  ]);
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100">
+    <main className="min-h-[calc(100vh-64px)] bg-slate-950 text-slate-100">
       <div className="mx-auto flex max-w-4xl flex-col gap-12 px-6 py-16">
         <section className="space-y-4">
           <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
@@ -20,6 +21,22 @@ export default async function Home() {
             machine settings, and receive data-backed fixes powered by
             open-source AI models.
           </p>
+          <div className="flex flex-wrap gap-4">
+            <Link
+              href={user ? "/dashboard" : "/login"}
+              className="rounded-full bg-slate-100 px-5 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-white"
+            >
+              {user ? "Go to dashboard" : "Sign in to start"}
+            </Link>
+            <Link
+              href="https://github.com/myles1663/ai-print-analyzer-web"
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-full border border-slate-700 px-5 py-2.5 text-sm font-semibold text-slate-100 transition hover:border-slate-500 hover:text-white"
+            >
+              View roadmap
+            </Link>
+          </div>
           <div className="rounded-lg border border-slate-800 bg-slate-900/60 p-4 text-sm text-slate-300">
             <h2 className="font-medium text-slate-100">Supabase status</h2>
             <p className="mt-1">
@@ -34,8 +51,7 @@ export default async function Home() {
               )}
             </p>
             <p className="mt-2 text-xs text-slate-500">
-              Add your first profile by wiring Supabase Auth in the upcoming
-              steps.
+              Profiles are now created automatically after you sign in.
             </p>
           </div>
         </section>

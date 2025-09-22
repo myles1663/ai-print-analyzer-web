@@ -8,10 +8,14 @@ export async function GET(request: Request) {
   if (code) {
     const supabase = supabaseRouteClient();
     await supabase.auth.exchangeCodeForSession(code);
-  }
 
-  requestUrl.searchParams.delete('code');
-  requestUrl.searchParams.delete('state');
+    await fetch(new URL('/api/auth/profile', request.url), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({}),
+    });
+  }
 
   const redirectUrl = new URL('/login?status=confirmed', request.url);
   return NextResponse.redirect(redirectUrl);
